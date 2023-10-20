@@ -26,8 +26,8 @@ namespace homework1
 
             if(clientDetailsView.DataItemCount == 1)
             {
-                Session["name"] = clientDetailsView.Rows[0].Cells[1].Text;
-                Session["money"] = clientDetailsView.Rows[1].Cells[1].Text;
+                Session["name"] = clientDetailsView.Rows[1].Cells[1].Text;
+                Session["money"] = clientDetailsView.Rows[0].Cells[1].Text;
                 Session["phone"] = clientDetailsView.Rows[2].Cells[1].Text;
                 entry.Visible = true;
             }
