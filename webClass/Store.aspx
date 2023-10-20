@@ -19,6 +19,10 @@
         .auto-style5 {
             color: #993366;
             background-color: #FFCCCC;
+            font-size: large;
+        }
+        .auto-style6 {
+            font-size: large;
         }
     </style>
 </head>
@@ -35,7 +39,7 @@
             </tr>
             <tr>
                 <td>
-                    <asp:DropDownList ID="drinkList" runat="server" AutoPostBack="True" DataSourceID="drinkData" DataTextField="drink_name" DataValueField="drink_Id" OnSelectedIndexChanged="drinkList_SelectedIndexChanged">
+                    <asp:DropDownList ID="drinkList" runat="server" AutoPostBack="True" DataSourceID="drinkData" DataTextField="drink_name" DataValueField="drink_Id" OnSelectedIndexChanged="drinkList_SelectedIndexChanged" CssClass="auto-style6">
                     </asp:DropDownList>
                     <asp:Label ID="drinkPriceLB" runat="server" CssClass="auto-style5" Text="X元"></asp:Label>
                     <asp:Label ID="drinkQtLB" runat="server" CssClass="auto-style5" Text="庫存：X個"></asp:Label>
@@ -49,8 +53,26 @@
                 <td>&nbsp;</td>
             </tr>
         </table>
+        <table class="auto-style2">
+            <tr>
+                <td>
+                    <asp:Button ID="orderBT" runat="server" CssClass="auto-style6" Text="前往訂購" OnClick="orderBT_Click" />
+                    <asp:Button ID="truncateTableBT" runat="server" CssClass="auto-style6" Text="重建表單" OnClick="truncateTableBT_Click" />
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+        <br />
+        <br />
         <asp:SqlDataSource ID="drinkData" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [drink_Id], [drink_name] FROM [drinkTable]"></asp:SqlDataSource>
-        <asp:SqlDataSource ID="drinkDataSelect" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [drink_price], [drink_qt] FROM [drinkTable] WHERE ([drink_Id] = @drink_Id)">
+        <asp:SqlDataSource ID="drinkDataSelect" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [drink_price], [drink_qt] FROM [drinkTable] WHERE ([drink_Id] = @drink_Id)" InsertCommand="INSERT INTO orderTable(order_time, order_userPhone) VALUES (GETDATE(), @order_userPhone)">
+            <InsertParameters>
+                <asp:SessionParameter Name="order_userPhone" SessionField="phone" />
+            </InsertParameters>
             <SelectParameters>
                 <asp:ControlParameter ControlID="drinkList" Name="drink_Id" PropertyName="SelectedValue" Type="Int32" />
             </SelectParameters>

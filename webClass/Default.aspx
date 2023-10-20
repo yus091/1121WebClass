@@ -63,11 +63,12 @@
         </table>
         <asp:DetailsView ID="clientDetailsView" runat="server" AutoGenerateRows="False" DataSourceID="clientDetail" EmptyDataText="帳號密碼錯誤" Height="50px" Visible="False" Width="125px">
             <Fields>
-                <asp:BoundField DataField="user_name" HeaderText="user_name" SortExpression="user_name" />
                 <asp:BoundField DataField="user_money" HeaderText="user_money" SortExpression="user_money" />
+                <asp:BoundField DataField="user_name" HeaderText="user_name" SortExpression="user_name" />
+                <asp:BoundField DataField="user_phone" HeaderText="user_phone" SortExpression="user_phone" />
             </Fields>
         </asp:DetailsView>
-        <asp:SqlDataSource ID="clientDetail" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [user_money], [user_name] FROM [userData] WHERE (([user_name] = @user_name) AND ([user_password] = @user_password))">
+        <asp:SqlDataSource ID="clientDetail" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [user_money], [user_name], [user_phone] FROM [userData] WHERE (([user_name] = @user_name) AND ([user_password] = @user_password))">
             <SelectParameters>
                 <asp:ControlParameter ControlID="accountBT" Name="user_name" PropertyName="Text" Type="String" />
                 <asp:ControlParameter ControlID="passwordBT" Name="user_password" PropertyName="Text" Type="String" />
