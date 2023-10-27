@@ -33,6 +33,24 @@ namespace webClass
         protected global::System.Web.UI.WebControls.Label userShowLB;
 
         /// <summary>
+        /// orderBT 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button orderBT;
+
+        /// <summary>
+        /// truncateTableBT 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button truncateTableBT;
+
+        /// <summary>
         /// drinkList 控制項。
         /// </summary>
         /// <remarks>
@@ -60,6 +78,51 @@ namespace webClass
         protected global::System.Web.UI.WebControls.Label drinkQtLB;
 
         /// <summary>
+        /// cupList 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cupList;
+
+        /// <summary>
+        /// cupLB 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label cupLB;
+
+        /// <summary>
+        /// sweetList 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList sweetList;
+
+        /// <summary>
+        /// iceList 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList iceList;
+
+        /// <summary>
+        /// addItemBT 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button addItemBT;
+
+        /// <summary>
         /// drinkImage 控制項。
         /// </summary>
         /// <remarks>
@@ -69,22 +132,13 @@ namespace webClass
         protected global::System.Web.UI.WebControls.Image drinkImage;
 
         /// <summary>
-        /// orderBT 控制項。
+        /// orderItemGridView 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button orderBT;
-
-        /// <summary>
-        /// truncateTableBT 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button truncateTableBT;
+        protected global::System.Web.UI.WebControls.GridView orderItemGridView;
 
         /// <summary>
         /// drinkData 控制項。
@@ -112,5 +166,14 @@ namespace webClass
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.DetailsView drinkDetailsView;
+
+        /// <summary>
+        /// orderItemDataSource 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource orderItemDataSource;
     }
 }

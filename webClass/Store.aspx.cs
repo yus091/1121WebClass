@@ -19,6 +19,11 @@ namespace webClass
                 drinkPriceLB.Text = "";
                 drinkQtLB.Text = "";
                 drinkImage.ImageUrl = "./pic/未選取.jpg";
+                for(int i = 0; i < 50; i++)
+                {
+                    cupList.Items.Insert(i, new ListItem("" + (i + 1), "" + (i + 1)));
+                }
+                cupList.SelectedIndex = 0;
             }
             
         }
@@ -31,11 +36,13 @@ namespace webClass
             {
                 drinkPriceLB.Text = "";
                 drinkQtLB.Text = "";
+                addItemBT.Enabled = false;
             }
             else
             {
                 drinkPriceLB.Text = drinkDetailsView.Rows[1].Cells[1].Text + " 元";
                 drinkQtLB.Text = "\t庫存： " + drinkDetailsView.Rows[0].Cells[1].Text + " 個";
+                addItemBT.Enabled = true;
             }
         }
 
@@ -52,7 +59,13 @@ namespace webClass
             {
                 Session["order_id"] = orderDr["order_id"];
                 orderBT.Text = orderDr["order_id"] + " 號訂單";
-                //orderBT.Enabled = false;
+                orderBT.Enabled = false;
+
+                cupLB.Visible = true;
+                cupList.Visible = true;
+                sweetList.Visible = true;
+                iceList.Visible = true;
+                addItemBT.Visible = true;
             }
             orderDr.Close();
         }
@@ -63,7 +76,26 @@ namespace webClass
             orderCon.Open();
             SqlCommand orderTableTruncateCmd = new SqlCommand("truncate table orderTable", orderCon);
             orderTableTruncateCmd.ExecuteNonQuery();
+            SqlCommand orderItemTableTruncateCmd = new SqlCommand("truncate table orderItemTable", orderCon);
+            orderItemTableTruncateCmd.ExecuteNonQuery();
             orderBT.Text = "前往訂購";
+            orderBT.Enabled = true;
+
+            cupLB.Visible = false;
+            cupList.Visible = false;
+            sweetList.Visible = false;
+            iceList.Visible = false;
+            addItemBT.Visible = false;
+            orderItemGridView.Visible = false;
+        }
+
+        protected void addItemBT_Click(object sender, EventArgs e)
+        {
+            orderItemDataSource.Insert();
+            if (!orderItemGridView.Visible)
+            {
+                orderItemGridView.Visible = true;
+            }
         }
     }
 }
