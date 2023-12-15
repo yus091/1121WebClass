@@ -23,9 +23,38 @@ namespace webClass
                 {
                     cupList.Items.Insert(i, new ListItem("" + (i + 1), "" + (i + 1)));
                 }
+                drinkList.SelectedIndex = 0;
                 cupList.SelectedIndex = 0;
+                sweetList.SelectedIndex = 0;
+                iceList.SelectedIndex = 0;
             }
             
+        }
+
+        private void initial()
+        {
+            drinkList.SelectedIndex = 0;
+            cupList.SelectedIndex = 0;
+            sweetList.SelectedIndex = 0;
+            iceList.SelectedIndex = 0;
+            drinkPriceLB.Text = "";
+            drinkQtLB.Text = "";
+            drinkImage.ImageUrl = "./pic/未選取.jpg";
+
+            orderBT.Text = "前往訂購";
+            orderBT.Enabled = true;
+
+            cupLB.Visible = false;
+            cupList.Visible = false;
+            sweetList.Visible = false;
+            iceList.Visible = false;
+            addItemBT.Visible = false;
+            addItemBT.Enabled = false;
+            orderItemGridView.Visible = false;
+            totalLB.Visible = false;
+            checkBT.Visible = false;
+            cancelBT.Visible = false;
+            errorLB.Visible = false;
         }
 
         protected void drinkList_SelectedIndexChanged(object sender, EventArgs e)
@@ -43,6 +72,22 @@ namespace webClass
                 drinkPriceLB.Text = drinkDetailsView.Rows[1].Cells[1].Text + " 元";
                 drinkQtLB.Text = "\t庫存： " + drinkDetailsView.Rows[0].Cells[1].Text + " 個";
                 addItemBT.Enabled = true;
+
+                drinkPriceLB.ForeColor = System.Drawing.Color.FromArgb(99, 33, 66);
+                drinkQtLB.ForeColor = System.Drawing.Color.FromArgb(99, 33, 66);
+
+                if(Convert.ToInt32(Session["money"]) < Convert.ToInt32(drinkDetailsView.Rows[1].Cells[1].Text))
+                {
+                    drinkPriceLB.ForeColor = System.Drawing.Color.Red;
+                    drinkPriceLB.Text += " 餘額不足";
+                    addItemBT.Enabled = false;
+                }
+                if(Convert.ToInt32(drinkDetailsView.Rows[0].Cells[1].Text) <= 0)
+                {
+                    drinkQtLB.ForeColor = System.Drawing.Color.Red;
+                    drinkQtLB.Text = "庫存不足";
+                    addItemBT.Enabled = false;
+                }
             }
         }
 
@@ -78,16 +123,7 @@ namespace webClass
             orderTableTruncateCmd.ExecuteNonQuery();
             SqlCommand orderItemTableTruncateCmd = new SqlCommand("truncate table orderItemTable", orderCon);
             orderItemTableTruncateCmd.ExecuteNonQuery();
-            orderBT.Text = "前往訂購";
-            orderBT.Enabled = true;
-
-            cupLB.Visible = false;
-            cupList.Visible = false;
-            sweetList.Visible = false;
-            iceList.Visible = false;
-            addItemBT.Visible = false;
-            orderItemGridView.Visible = false;
-            totalLB.Visible = false;
+            initial();
 
         }
 
@@ -99,11 +135,51 @@ namespace webClass
                 orderItemGridView.Visible = true;
             }
             totalLB.Visible = true;
+            checkBT.Visible = true;
+            cancelBT.Visible = true;
         }
 
         protected void orderItemGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            errorLB.Text = "";
+            errorLB.Visible = false;
+            checkBT.Enabled = true;
             countTotalLB();
+            qtCheck();
+            qtCheckGridView.DataBind();
+
+        }
+
+        private void qtCheck()
+        {
+            int num;
+            int qt;
+            bool isError = false;
+            for(int i = 0; i < qtCheckGridView.Rows.Count; i++)
+            {
+                if(qtCheckGridView.Rows[i].Cells[1].FindControl("qtNameLB") != null &&
+                   qtCheckGridView.Rows[i].Cells[2].FindControl("totalNumLB") != null &&
+                   qtCheckGridView.Rows[i].Cells[3].FindControl("checkQtLB") != null)
+                {
+                    using (Label qtNameLB = (Label)qtCheckGridView.Rows[i].Cells[1].FindControl("qtNameLB"),
+                        totalNumLB = (Label)qtCheckGridView.Rows[i].Cells[2].FindControl("totalNumLB"),
+                        checkQtLB = (Label)qtCheckGridView.Rows[i].Cells[3].FindControl("checkQtLB"))
+                    {
+                        num = Convert.ToInt32(totalNumLB.Text);
+                        qt = Convert.ToInt32(checkQtLB.Text);
+                        if(num > qt)
+                        {
+                            errorLB.Text += "<br>" + qtNameLB.Text + "庫存不足（剩下" + qt + "杯）";
+                            isError = true;
+                        }
+                    }
+                }
+            }
+            if (isError)
+            {
+                checkBT.Enabled = false;
+                errorLB.Visible = true;
+            }
         }
 
         private void countTotalLB()
@@ -119,6 +195,18 @@ namespace webClass
                 cupEditCheck(ref warmMsg, i);
             }
             totalLB.Text = warmMsg + "總價：" + total + " 元";
+
+            Session["total"] = total;
+
+            if(total == 0)
+            {
+                checkBT.Enabled = false;
+            }
+            if(Convert.ToInt32(Session["money"]) < total){
+                checkBT.Enabled = false;
+                errorLB.Text = "餘額不足";
+                errorLB.Visible = true;
+            }
         }
 
         private void cupEditCheck(ref string msg, int i)
@@ -145,6 +233,8 @@ namespace webClass
             if(orderItemGridView.Rows.Count == 1)
             {
                 totalLB.Visible = false;
+                errorLB.Visible = false;
+                checkBT.Enabled = false;
             }
         }
 
@@ -156,6 +246,47 @@ namespace webClass
                 {
                     ((TextBox)sender).Text = "0";                }
             }
+        }
+
+        protected void checkBT_Click(object sender, EventArgs e)
+        {
+            Session["money"] = Convert.ToInt32(Session["money"]) - Convert.ToInt32(Session["total"]);
+            userShowLB.Text = Session["name"] + "歡迎光臨<br>您還剩下：" + Session["money"] + "元";
+            clientDataSource.Update();
+            updateQt();
+            initial();
+        }
+
+        private void updateQt()
+        {
+            int num;
+            int qt;
+
+            for (int i = 0; i < qtCheckGridView.Rows.Count; i++)
+            {
+                if (qtCheckGridView.Rows[i].Cells[0].FindControl("qtIdLB") != null &&
+                   qtCheckGridView.Rows[i].Cells[2].FindControl("totalNumLB") != null &&
+                   qtCheckGridView.Rows[i].Cells[3].FindControl("checkQtLB") != null)
+                {
+                    using (Label qtIdLB = (Label)qtCheckGridView.Rows[i].Cells[0].FindControl("qtIdLB"),
+                        totalNumLB = (Label)qtCheckGridView.Rows[i].Cells[2].FindControl("totalNumLB"),
+                        checkQtLB = (Label)qtCheckGridView.Rows[i].Cells[3].FindControl("checkQtLB"))
+                    {
+                        num = Convert.ToInt32(totalNumLB.Text);
+                        qt = Convert.ToInt32(checkQtLB.Text);
+                        Session["updateQtId"] = Convert.ToInt32(qtIdLB.Text);
+                        Session["updateQtNum"] = qt - num;
+                        drinkQtDataSource.Update();
+                    }
+                }
+            }
+        }
+
+        protected void cancelBT_Click(object sender, EventArgs e)
+        {
+            drinkDataSelect.Delete();
+            cancelOrderDataSource.Delete();
+            initial();
         }
     }
 }
